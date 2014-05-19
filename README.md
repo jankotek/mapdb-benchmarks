@@ -8,7 +8,7 @@ To use add this maven dependency:
     <dependencies>
         <dependency>
             <groupId>org.mapdb</groupId>
-            <artifactId>mapdb-snappy</artifactId>
+            <artifactId>mapdb-unsafe</artifactId>
             <version>0.9</version>
         </dependency>
     </dependencies>
