@@ -4,7 +4,7 @@
 
     <groupId>org.mapdb</groupId>
     <artifactId>mapdb-unsafe</artifactId>
-    <version>0.9-SNAPSHOT</version>
+    <version>0.9</version>
 
     <name>mapdb-unsafe</name>
     <description>Provides in-memory store which uses sun.misc.Unsafe for 10% boost.</description>
