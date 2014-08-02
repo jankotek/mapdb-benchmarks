@@ -1,0 +1,50 @@
+<project name="mappdb-benchmarks" default="run" basedir=".">
+    <description>
+        mapdb-benchmarks
+    </description>
+
+    <!-- set global properties for this build -->
+    <property name="src" location="src"/>
+    <property name="build" location="build"/>
+    <property name="jvmargs" value="-Xmx25G -XX:-UseGCOverheadLimit"/>
+    <property name="mainClass" value="org.mapdb.benchmarks.InMemoryUUIDTest"/>
+
+
+    <path id="classpath">
+        <fileset dir="lib">
+            <include name="**/*.jar"/>
+        </fileset>
+        <pathelement  path="${build}/" />
+    </path>
+
+
+    <target name="init">
+        <!-- Create the time stamp -->
+        <tstamp/>
+        <!-- Create the build directory structure used by compile -->
+        <delete dir="${build}"/>
+        <mkdir dir="${build}"/>
+        <javac srcdir="${src}" destdir="${build}" classpathref="classpath"/>
+    </target>
+
+    <target name="run" depends="init"
+            description="run benchmark" >
+
+        <java fork="true"  classpathref="classpath" classname="${mainClass}" jvmargs="${jvmargs}" args="true 1"/>
+        <java fork="true"  classpathref="classpath" classname="${mainClass}" jvmargs="${jvmargs}" args="true 2"/>
+        <java fork="true"  classpathref="classpath" classname="${mainClass}" jvmargs="${jvmargs}" args="true 4"/>
+        <java fork="true"  classpathref="classpath" classname="${mainClass}" jvmargs="${jvmargs}" args="true 8"/>
+        <java fork="true"  classpathref="classpath" classname="${mainClass}" jvmargs="${jvmargs}" args="true 16"/>
+        <java fork="true"  classpathref="classpath" classname="${mainClass}" jvmargs="${jvmargs}" args="true 32"/>
+
+        <java fork="true" classpathref="classpath" classname="${mainClass}" jvmargs="${jvmargs}" args="false 1"/>
+        <java fork="true"  classpathref="classpath" classname="${mainClass}" jvmargs="${jvmargs}" args="false 2"/>
+        <java fork="true"  classpathref="classpath" classname="${mainClass}" jvmargs="${jvmargs}" args="false 4"/>
+        <java fork="true"  classpathref="classpath" classname="${mainClass}" jvmargs="${jvmargs}" args="false 8"/>
+        <java fork="true"  classpathref="classpath" classname="${mainClass}" jvmargs="${jvmargs}" args="false 16"/>
+        <java fork="true"  classpathref="classpath" classname="${mainClass}" jvmargs="${jvmargs}" args="false 32"/>
+
+
+    </target>
+
+</project>
