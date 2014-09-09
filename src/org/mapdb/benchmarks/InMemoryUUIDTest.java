@@ -1,6 +1,6 @@
 package org.mapdb.benchmarks;
 
-import org.mapdb.*;
+import org.mapdb10.*;
 
 import java.util.Map;
 import java.util.Random;
