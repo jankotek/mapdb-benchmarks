@@ -32,7 +32,7 @@ public class InMemoryUUIDTest {
 
         if(type ==0) {
             m = new HashMap();
-        }else if(type ==0){
+        }else if(type ==1){
             m = new ConcurrentSkipListMap();
         }else if(type ==2){
             m = org.mapdb10.DBMaker.newMemoryDB().transactionDisable().make()
