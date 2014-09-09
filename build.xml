@@ -29,7 +29,7 @@
     <target name="run" depends="init"
             description="run benchmark" >
 
-        <for list="0, 1, 2, 3, 4, 5" param="map">
+        <for list="0,1,2,3,4,5" param="map">
         <sequential>
         <for list="1,2,4" param="threads">
             <sequential>
