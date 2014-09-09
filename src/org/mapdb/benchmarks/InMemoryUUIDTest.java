@@ -1,7 +1,8 @@
 package org.mapdb.benchmarks;
 
-import org.mapdb10.*;
+import org.mapdb.*;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
@@ -16,56 +17,74 @@ public class InMemoryUUIDTest {
 
     final static long time = 100 * 1000;
     final static long size = (long) 1e8;
-
-    //create map and fill it with data
-    static Fun.Function1 newUUID = new Fun.Function1() {
-
-        Random r = new Random();
-
-        @Override
-        public Object run(Object o) {
-            return new UUID(r.nextLong(), r.nextLong());
-        }
-    };
+    final static Random r = new Random();
+;
 
 
     public static void main(String[] args) {
 
 
-        boolean mapdb = Boolean.parseBoolean(args[0]);
+        int type  = Integer.parseInt(args[0]);
         int threads = Integer.parseInt(args[1]);
 
         Map m;
         String title;
 
-        if(mapdb) {
-            DB db = DBMaker.newMemoryDB()
-                    .transactionDisable()
+        if(type ==0) {
+            m = new HashMap();
+        }else if(type ==0){
+            m = new ConcurrentSkipListMap();
+        }else if(type ==2){
+            m = org.mapdb10.DBMaker.newMemoryDB().transactionDisable().make()
+                    .createHashMap("test")
+                    .keySerializer(org.mapdb10.Serializer.LONG)
+                    .valueSerializer(org.mapdb10.Serializer.UUID)
                     .make();
+        }else if(type ==3){
+            m = org.mapdb10.DBMaker.newMemoryDB().transactionDisable().make()
+                    .createTreeMap("test")
+                    .pumpSource(BU.reverseLongIterator(0,size),new org.mapdb10.Fun.Function1() {
+                        @Override
+                        public Object run(Object o) {
+                            return new UUID(r.nextLong(), r.nextLong());
+                        }
+                    })
+                    .keySerializer(org.mapdb10.BTreeKeySerializer.ZERO_OR_POSITIVE_LONG)
 
-
-
-            m = db.createTreeMap("map")
-                    .pumpSource(BU.reverseLongIterator(0,size),newUUID)
-                    .keySerializer(BTreeKeySerializer.ZERO_OR_POSITIVE_LONG)
+                    .valueSerializer(org.mapdb10.Serializer.UUID)
+                    .make();
+        }else if(type ==4){
+            m = DBMaker.newMemoryDB().transactionDisable().make()
+                    .createHashMap("test")
+                    .keySerializer(Serializer.LONG)
                     .valueSerializer(Serializer.UUID)
                     .make();
+        }else if(type ==5){
+            m = DBMaker.newMemoryDB().transactionDisable().make()
+                    .createTreeMap("test")
+                    .pumpSource(BU.reverseLongIterator(0,size),new Fun.Function1() {
+                        @Override
+                        public Object run(Object o) {
+                            return new UUID(r.nextLong(), r.nextLong());
+                        }
+                    })
+                    .keySerializer(BTreeKeySerializer.ZERO_OR_POSITIVE_LONG)
 
-            title = "BTreeMap";
-        }else {
-
-            //run NavigableSkipListMap
-
-            m = new ConcurrentSkipListMap();
-
-            for (Long key = 0L; key < size; key++) {
-                m.put(key, newUUID.run(key));
-            }
-
-            title = "SkipListMap";
+                    .valueSerializer(Serializer.UUID)
+                    .make();
+        }else{
+            throw new IllegalArgumentException("Unknown map type: "+type);
         }
 
-        runBench(title, threads,m);
+
+        if(m.isEmpty()) {
+            for (Long key = 0L; key < size; key++) {
+                m.put(key, new UUID(r.nextLong(),r.nextLong()));
+            }
+        }
+
+
+        runBench(m.getClass().getName(), threads,m);
     }
 
 

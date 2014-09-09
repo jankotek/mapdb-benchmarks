@@ -4,8 +4,6 @@
     </description>
 
     <!-- set global properties for this build -->
-    <property name="src" location="src"/>
-    <property name="build" location="build"/>
     <property name="mainClass" value="org.mapdb.benchmarks.InMemoryUUIDTest"/>
 
     <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
@@ -14,7 +12,8 @@
         <fileset dir="lib">
             <include name="**/*.jar"/>
         </fileset>
-        <pathelement  path="${build}/" />
+        <pathelement  path="build/" />
+        <pathelement  path="../mapdb/target/classes" />
     </path>
 
 
@@ -22,21 +21,21 @@
         <!-- Create the time stamp -->
         <tstamp/>
         <!-- Create the build directory structure used by compile -->
-        <delete dir="${build}"/>
-        <mkdir dir="${build}"/>
-        <javac srcdir="${src}" destdir="${build}" classpathref="classpath"/>
+        <delete dir="build"/>
+        <mkdir dir="build"/>
+        <javac srcdir="src" destdir="build" classpathref="classpath"/>
     </target>
 
     <target name="run" depends="init"
             description="run benchmark" >
 
-        <for list="true, false" param="usemapdb">
+        <for list="0, 1, 2, 3, 4, 5" param="map">
         <sequential>
-        <for list="1,2,4,8,16" param="threads">
+        <for list="1,2,4" param="threads">
             <sequential>
                 <java fork="true"  classpathref="classpath" classname="${mainClass}">
                     <jvmarg value="-Xmx25G"/>
-                    <arg value="@{usemapdb}"/>
+                    <arg value="@{map}"/>
                     <arg value="@{threads}"/>
                 </java>
             </sequential>
