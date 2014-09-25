@@ -4,7 +4,7 @@
     </description>
 
     <!-- set global properties for this build -->
-    <property name="mainClass" value="org.mapdb.benchmarks.InMemoryUUIDTest"/>
+    <loadproperties srcFile="build.properties"/>
 
     <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
 
@@ -29,16 +29,22 @@
     <target name="run" depends="init"
             description="run benchmark" >
 
-        <for list="0,1,2,3,4,5" param="map">
+        <for list="${classes}" param="mainClass" trim="true">
         <sequential>
-        <for list="1,2,4" param="threads">
+        <for list="${tasks}" param="map" trim="true">
+        <sequential>
+        <for list="${threads}" param="threads" trim="true">
             <sequential>
-                <java fork="true"  classpathref="classpath" classname="${mainClass}">
+                <java fork="true"  classpathref="classpath" classname="@{mainClass}">
                     <jvmarg value="-Xmx25G"/>
+                    <arg value="${time}"/>
+                    <arg value="${size}"/>
                     <arg value="@{map}"/>
                     <arg value="@{threads}"/>
                 </java>
             </sequential>
+        </for>
+        </sequential>
         </for>
         </sequential>
         </for>

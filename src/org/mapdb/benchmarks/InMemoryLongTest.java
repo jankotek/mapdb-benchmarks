@@ -13,19 +13,20 @@ import java.util.concurrent.Executors;
 /**
  * In-memory concurrent benchmark of MapDB versus ConcurrentSkipListMap
  */
-public class InMemoryUUIDTest {
+public class InMemoryLongTest {
 
-    final static long time = 100 * 1000;
-    final static long size = (long) 1e8;
+    static long time;
+    static long size;
     final static Random r = new Random();
-;
+
 
 
     public static void main(String[] args) {
 
-
-        int type  = Integer.parseInt(args[0]);
-        int threads = Integer.parseInt(args[1]);
+        time = Long.parseLong(args[0])*1000;
+        size = Long.parseLong(args[1])*1000000;
+        int type  = Integer.parseInt(args[2]);
+        int threads = Integer.parseInt(args[3]);
 
         Map m;
         String title;
