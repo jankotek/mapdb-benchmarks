@@ -1,9 +1,7 @@
+Benchmarks for MapDB. 
+
+Install ant and run:
+
 ```xml
-    <dependencies>
-        <dependency>
-            <groupId>org.mapdb</groupId>
-            <artifactId>mapdb-benchmarks</artifactId>
-            <version>0.1-SNAPSHOT</version>
-        </dependency>
-    </dependencies>
+    ant
 ```
