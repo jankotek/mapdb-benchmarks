@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -22,11 +23,9 @@ public class InMemoryStringTest {
     static long size;
     final static int stringSize = 32;
     final static Random r = new Random();
-;
 
 
     public static void main(String[] args) {
-
         time = Long.parseLong(args[0])*1000;
         size = Long.parseLong(args[1])*1000000;
 
@@ -37,7 +36,7 @@ public class InMemoryStringTest {
         String title;
 
         if(type ==0) {
-            m = new HashMap();
+            m = new ConcurrentHashMap();
         }else if(type ==1){
             m = new ConcurrentSkipListMap();
         }else if(type ==2){
@@ -86,7 +85,7 @@ public class InMemoryStringTest {
 
         {
 
-            BU.printStart(title+" #"+threadNum+" - reads");
+            BU.printStart(title,"reads",threadNum);
             ExecutorService e = Executors.newCachedThreadPool();
 
             for (int i = 0; i < threadNum; i++) {
@@ -109,7 +108,7 @@ public class InMemoryStringTest {
         }
 
         {
-            BU.printStart(title+" #"+threadNum+" - updates");
+            BU.printStart(title, "updates", threadNum);
             ExecutorService e = Executors.newCachedThreadPool();
 
             for (int i = 0; i < threadNum; i++) {
@@ -133,7 +132,7 @@ public class InMemoryStringTest {
         }
 
         {
-            BU.printStart(title+" #"+threadNum+" - combined");
+            BU.printStart(title,"combined",threadNum);
             ExecutorService e = Executors.newCachedThreadPool();
 
             for (int i = 0; i < threadNum; i++) {

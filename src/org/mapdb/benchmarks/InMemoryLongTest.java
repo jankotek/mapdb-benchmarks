@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -32,7 +33,7 @@ public class InMemoryLongTest {
         String title;
 
         if(type ==0) {
-            m = new HashMap();
+            m = new ConcurrentHashMap();
         }else if(type ==1){
             m = new ConcurrentSkipListMap();
         }else if(type ==2){
@@ -44,7 +45,7 @@ public class InMemoryLongTest {
         }else if(type ==3){
             m = org.mapdb10.DBMaker.newMemoryDB().transactionDisable().make()
                     .createTreeMap("test")
-                    .pumpSource(BU.reverseLongIterator(0,size),new org.mapdb10.Fun.Function1() {
+                    .pumpSource(BU.reverseLongIterator(0, size), new org.mapdb10.Fun.Function1() {
                         @Override
                         public Object run(Object o) {
                             return new UUID(r.nextLong(), r.nextLong());
@@ -63,7 +64,7 @@ public class InMemoryLongTest {
         }else if(type ==5){
             m = DBMaker.newMemoryDB().transactionDisable().make()
                     .createTreeMap("test")
-                    .pumpSource(BU.reverseLongIterator(0,size),new Fun.Function1() {
+                    .pumpSource(BU.reverseLongIterator(0, size), new Fun.Function1() {
                         @Override
                         public Object run(Object o) {
                             return new UUID(r.nextLong(), r.nextLong());
@@ -93,7 +94,7 @@ public class InMemoryLongTest {
 
         {
 
-            BU.printStart(title+" #"+threadNum+" - reads");
+            BU.printStart(title, "reads", threadNum);
             ExecutorService e = Executors.newCachedThreadPool();
 
             for (int i = 0; i < threadNum; i++) {
@@ -116,7 +117,7 @@ public class InMemoryLongTest {
         }
 
         {
-            BU.printStart(title+" #"+threadNum+" - updates");
+            BU.printStart(title, "updates", threadNum);
             ExecutorService e = Executors.newCachedThreadPool();
 
             for (int i = 0; i < threadNum; i++) {
@@ -140,7 +141,7 @@ public class InMemoryLongTest {
         }
 
         {
-            BU.printStart(title+" #"+threadNum+" - combined");
+            BU.printStart(title, "combined", threadNum);
             ExecutorService e = Executors.newCachedThreadPool();
 
             for (int i = 0; i < threadNum; i++) {

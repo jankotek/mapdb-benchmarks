@@ -20,33 +20,48 @@
     <target name="init">
         <!-- Create the time stamp -->
         <tstamp/>
+
+        <echo>Java Version via Ant: ${ant.java.version}</echo>
+        <echo>Java Version System Prop: ${java.version}</echo>
+
         <!-- Create the build directory structure used by compile -->
         <delete dir="build"/>
         <mkdir dir="build"/>
+        <delete dir="res"/>
+        <mkdir dir="res"/>
+
         <javac srcdir="src" destdir="build" classpathref="classpath"/>
+
+        <exec dir="../mapdb" command="mvn compile"/>
+
     </target>
 
     <target name="run" depends="init"
             description="run benchmark" >
 
         <for list="${classes}" param="mainClass" trim="true">
-        <sequential>
-        <for list="${tasks}" param="map" trim="true">
-        <sequential>
-        <for list="${threads}" param="threads" trim="true">
             <sequential>
-                <java fork="true"  classpathref="classpath" classname="@{mainClass}">
-                    <jvmarg value="-Xmx25G"/>
-                    <arg value="${time}"/>
-                    <arg value="${size}"/>
-                    <arg value="@{map}"/>
-                    <arg value="@{threads}"/>
+                <echo>----@{mainClass}----</echo>
+                <for list="${tasks}" param="map" trim="true">
+                    <sequential>
+                        <for list="${threads}" param="threads" trim="true">
+                            <sequential>
+                                <java fork="true"  classpathref="classpath" classname="@{mainClass}">
+                                    <jvmarg value="-Xmx25G"/>
+                                    <arg value="${time}"/>
+                                    <arg value="${size}"/>
+                                    <arg value="@{map}"/>
+                                    <arg value="@{threads}"/>
+                                </java>
+                            </sequential>
+                        </for>
+                    </sequential>
+                </for>
+
+                <java classpathref="classpath" classname="org.mapdb.benchmarks.Charts">
+                    <arg value="res/@{mainClass}"/>
                 </java>
             </sequential>
-        </for>
-        </sequential>
-        </for>
-        </sequential>
         </for>
 
 

@@ -1,17 +1,18 @@
 package org.mapdb.benchmarks;
 
 
-import java.io.File;
-import java.io.IOError;
-import java.io.IOException;
+import java.io.*;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Properties;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class BU {
+
+    public static final String RESULT_PROPERTIES = "res/result.properties";
 
     public final static String TMPDIR = System.getProperty("java.io.tmpdir");
     private final static String chars = "0123456789abcdefghijklmnopqrstuvwxyz !@#$%^&*()_+=-{}[]:\",./<>?|\\";
@@ -69,10 +70,14 @@ public class BU {
 
     static private AtomicLong printCounter = new AtomicLong();
     static private volatile long printTime;
-    static private String printDesc;
+    static private volatile String printTitle;
+    static private volatile String printTaskName;
+    static private volatile int printThreadNum;
 
-    static public void printStart(String desc){
-        printDesc = desc;
+    static public void printStart(String title, String taskName, int threadNum){
+        printTitle = title;
+        printTaskName = taskName;
+        printThreadNum = threadNum;
         printTime = System.currentTimeMillis();
         printCounter.set(0);
     }
@@ -82,10 +87,27 @@ public class BU {
         if(t==0)
             t=1;
         long c = printCounter.get();
-        System.out.printf("%30s  @  " +
-                //"%,d per second" +
-                "%d" +
-                "\n",printDesc, (1000L * c)/t);
+        System.out.printf("%-30s  -  %8s  -  %2d  -  %,10d \n",
+                printTitle,
+                printTaskName,
+                printThreadNum,
+                (1000L * c)/t);
+
+
+        try{
+            File f = new File(BU.RESULT_PROPERTIES);
+            if(f.getParentFile().exists()) {
+                Properties props = new Properties();
+                if(f.exists())
+                    props.load(new FileReader(f));
+                props.put(printTitle + "_" + printTaskName + "_" + printThreadNum, ""+c);
+                OutputStream out = new FileOutputStream(f);
+                props.store(out, "");
+                out.close();
+            }
+        }catch (IOException e){
+            e.printStackTrace();
+        }
 
     }
 
