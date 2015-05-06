@@ -53,8 +53,10 @@ public class InMemoryStringTest {
                     .valueSerializer(org.mapdb10.Serializer.UUID)
                     .make();
         }else if(type ==4){
-            m = DBMaker.newMemoryDB().transactionDisable().make()
-                    .createHashMap("test")
+            m =
+//                    DBMaker.newMemoryDB().transactionDisable().make()
+//                    .createHashMap("test")
+                    DBMaker.hashMapSegmentedMemory()
                     .keySerializer(Serializer.STRING)
                     .valueSerializer(Serializer.UUID)
                     .make();

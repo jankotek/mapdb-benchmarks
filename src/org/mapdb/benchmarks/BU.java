@@ -2,12 +2,8 @@ package org.mapdb.benchmarks;
 
 
 import java.io.*;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.Properties;
-import java.util.Random;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class BU {
@@ -91,7 +87,7 @@ public class BU {
                 printTitle,
                 printTaskName,
                 printThreadNum,
-                (1000L * c)/t);
+                (1000L * c) / t);
 
 
         try{
@@ -160,4 +156,43 @@ public class BU {
         };
     }
 
+    public static void execNTimes(int n, final Callable r){
+        ExecutorService s = Executors.newFixedThreadPool(n);
+        final CountDownLatch wait = new CountDownLatch(n);
+
+        List<Future> f = new ArrayList();
+
+        Runnable r2 = new Runnable(){
+
+            @Override
+            public void run() {
+                wait.countDown();
+                try {
+                    wait.await();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                try {
+                    r.call();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        };
+
+        for(int i=0;i<n;i++){
+            f.add(s.submit(r2));
+        }
+
+        s.shutdown();
+
+        for(Future ff:f){
+            try {
+                ff.get();
+            } catch (Exception e) {
+                throw new Error(e);
+            }
+        }
+
+    }
 }
