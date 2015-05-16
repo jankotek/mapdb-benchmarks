@@ -68,6 +68,7 @@ public class Charts {
                     dataset
             );
 
+            target = target.replace(".","_"); //Latex has really stupid extension detection
 
             ChartUtilities.saveChartAsPNG(new File(target + "-single-thread.png"), chart, 700, 500);
         }
