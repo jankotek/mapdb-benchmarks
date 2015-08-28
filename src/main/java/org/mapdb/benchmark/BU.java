@@ -1,13 +1,11 @@
-package org.mapdb.benchmarks;
+package org.mapdb.benchmark;
 
+
+import org.mapdb.DataIO;
 
 import java.io.*;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.Properties;
-import java.util.Random;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class BU {
@@ -15,38 +13,59 @@ public class BU {
     public static final String RESULT_PROPERTIES = "res/result.properties";
 
     public final static String TMPDIR = System.getProperty("java.io.tmpdir");
-    private final static String chars = "0123456789abcdefghijklmnopqrstuvwxyz !@#$%^&*()_+=-{}[]:\",./<>?|\\";
 
-    public static byte[] randomByte(int size, long seed) {
-        byte[] b = new byte[size];
-        Random r = new Random(seed);
-        r.nextBytes(b);
-        return b;
+    private static final char[] chars = "0123456789abcdefghijklmnopqrstuvwxyz !@#$%^&*()_+=-{}[]:\",./<>?|\\".toCharArray();
+
+    public static void resultAdd(String key, String value) throws IOException {
+        Properties p = new Properties(){
+            public synchronized Enumeration<Object> keys() {
+                return Collections.enumeration(new TreeSet<Object>(super.keySet()));
+            }
+        };
+
+        File f = new File(BU.RESULT_PROPERTIES);
+        if(f.exists())
+            p.load(new FileReader(f));
+        p.put(key, value);
+        p.store(new FileWriter(f),"mapdb benchmarks");
     }
 
-    public static byte[] randomByte(int size) {
-        byte[] b = new byte[size];
-        Random r = new Random();
-        r.nextBytes(b);
-        return b;
+    public static String resultGet(String key) throws IOException {
+        Properties p = new Properties();
+        File f = new File(BU.RESULT_PROPERTIES);
+        if(f.exists())
+            p.load(new FileReader(f));
+
+        return (String) p.get(key);
     }
 
-    public static String randomString(int size, long seed) {
-        StringBuilder b = new StringBuilder(size);
-        Random r = new Random(seed);
-        for(int i=0;i<size;i++){
-            b.append(chars.charAt(r.nextInt(chars.length())));
-        }
-        return b.toString();
-    }
 
     public static String randomString(int size) {
+        return randomString(size, (int) (100000 * Math.random()));
+    }
+
+    public static String randomString(int size, int seed) {
         StringBuilder b = new StringBuilder(size);
-        Random r = new Random();
         for(int i=0;i<size;i++){
-            b.append(chars.charAt(r.nextInt(chars.length())));
+            b.append(chars[Math.abs(seed)%chars.length]);
+            seed = 31*seed+ DataIO.intHash(seed);
+
         }
         return b.toString();
+    }
+
+    /* faster version of Random.nextBytes() */
+    public static byte[] randomByteArray(int size){
+        return randomByteArray(size, (int) (100000 * Math.random()));
+    }
+    /* faster version of Random.nextBytes() */
+    public static byte[] randomByteArray(int size, int randomSeed){
+        byte[] ret = new byte[size];
+        for(int i=0;i<ret.length;i++){
+            ret[i] = (byte) randomSeed;
+            randomSeed = 31*randomSeed+DataIO.intHash(randomSeed);
+        }
+        return ret;
     }
 
 
@@ -91,7 +110,7 @@ public class BU {
                 printTitle,
                 printTaskName,
                 printThreadNum,
-                (1000L * c)/t);
+                (1000L * c) / t);
 
 
         try{
@@ -158,6 +177,54 @@ public class BU {
                 throw new UnsupportedOperationException();
             }
         };
+    }
+
+    public static void execNTimes(int n, final Callable r){
+        ExecutorService s = Executors.newFixedThreadPool(n);
+        final CountDownLatch wait = new CountDownLatch(n);
+
+        List<Future> f = new ArrayList();
+
+        Runnable r2 = new Runnable(){
+
+            @Override
+            public void run() {
+                wait.countDown();
+                try {
+                    wait.await();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                try {
+                    r.call();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        };
+
+        for(int i=0;i<n;i++){
+            f.add(s.submit(r2));
+        }
+
+        s.shutdown();
+
+        for(Future ff:f){
+            try {
+                ff.get();
+            } catch (Exception e) {
+                throw new Error(e);
+            }
+        }
+
+    }
+
+    static String outStreamToString(InputStream in) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        for(int b=in.read();b!=-1;b=in.read()){
+            out.write(b);
+        }
+        return new String(out.toByteArray());
     }
 
 }
