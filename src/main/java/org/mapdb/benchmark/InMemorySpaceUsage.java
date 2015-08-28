@@ -123,5 +123,9 @@ public class InMemorySpaceUsage {
                 return new Fun.Pair(val,"");
             }
 
+            @Override
+            public void remove() {
+
+            }
     }
 }
