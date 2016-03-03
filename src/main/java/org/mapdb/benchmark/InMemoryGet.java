@@ -1,6 +1,6 @@
 package org.mapdb.benchmark;
 
-import org.mapdb.DataIO;
+import org.mapdb.DBUtil;
 
 import java.util.Map;
 import java.util.Random;
@@ -13,7 +13,7 @@ import java.util.concurrent.Callable;
 public class InMemoryGet {
 
     static final int memUsage = 20;
-    static final int max = (int) 100e6;
+    static final int max = (int) 1e6;
     
     static final Map<String, Callable<Map<Long,UUID>>> fabs = InMemoryCreate.fabs;
 
@@ -22,7 +22,7 @@ public class InMemoryGet {
         String name = args[0];
         Map map = fabs.get(name).call();
         for (long i=0;i<max;i++) {
-            UUID val = new UUID(DataIO.longHash(i),DataIO.longHash(i+1)); //Random is too slow, so use faster hash
+            UUID val = new UUID(DBUtil.longHash(i), DBUtil.longHash(i+1)); //Random is too slow, so use faster hash
             map.put(i, val);
         }
         long time = System.currentTimeMillis();

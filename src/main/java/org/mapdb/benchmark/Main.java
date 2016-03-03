@@ -21,9 +21,9 @@ public class Main {
         }
 
 
-        for(String name: InMemorySpaceUsage.fabs.keySet()) {
-            run(InMemorySpaceUsage.class, null, InMemorySpaceUsage.memUsage, null, name);
-        }
+//        for(String name: InMemorySpaceUsage.fabs.keySet()) {
+//            run(InMemorySpaceUsage.class, null, InMemorySpaceUsage.memUsage, null, name);
+//        }
 
         for(String name: InMemoryCreate.fabs.keySet()) {
             run(InMemoryCreate.class, InMemoryCreate.memUsage, InMemoryCreate.memUsage, null, name);
@@ -38,7 +38,7 @@ public class Main {
             run(InMemoryGet.class, InMemoryGet.memUsage, InMemoryGet.memUsage, null, name);
         }
 
-        Charts.main(args);
+        //Charts.main(args);
     }
 
     /**

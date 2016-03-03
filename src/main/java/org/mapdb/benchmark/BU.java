@@ -1,7 +1,7 @@
 package org.mapdb.benchmark;
 
 
-import org.mapdb.DataIO;
+import org.mapdb.DBUtil;
 
 import java.io.*;
 import java.util.*;
@@ -48,7 +48,7 @@ public class BU {
         StringBuilder b = new StringBuilder(size);
         for(int i=0;i<size;i++){
             b.append(chars[Math.abs(seed)%chars.length]);
-            seed = 31*seed+ DataIO.intHash(seed);
+            seed = 31*seed+ DBUtil.intHash(seed);
 
         }
         return b.toString();
@@ -63,7 +63,7 @@ public class BU {
         byte[] ret = new byte[size];
         for(int i=0;i<ret.length;i++){
             ret[i] = (byte) randomSeed;
-            randomSeed = 31*randomSeed+DataIO.intHash(randomSeed);
+            randomSeed = 31*randomSeed+ DBUtil.intHash(randomSeed);
         }
         return ret;
     }
