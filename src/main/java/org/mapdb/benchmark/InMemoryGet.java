@@ -1,6 +1,6 @@
 package org.mapdb.benchmark;
 
-import org.mapdb.DBUtil;
+import org.mapdb.DataIO;
 
 import java.util.Map;
 import java.util.Random;
@@ -22,7 +22,7 @@ public class InMemoryGet {
         String name = args[0];
         Map map = fabs.get(name).call();
         for (long i=0;i<max;i++) {
-            UUID val = new UUID(DBUtil.longHash(i), DBUtil.longHash(i+1)); //Random is too slow, so use faster hash
+            UUID val = new UUID(DataIO.longHash(i), DataIO.longHash(i+1)); //Random is too slow, so use faster hash
             map.put(i, val);
         }
         long time = System.currentTimeMillis();
