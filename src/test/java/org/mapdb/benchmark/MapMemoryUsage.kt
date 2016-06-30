@@ -1,10 +1,7 @@
 package org.mapdb.benchmark
 
 import org.junit.Test
-import org.mapdb.CC
-import org.mapdb.DBMaker
-import org.mapdb.Serializer
-import org.mapdb.SortedTableMap
+import org.mapdb.*
 import org.mapdb.volume.ByteArrayVol
 import java.io.File
 import java.io.InputStreamReader
@@ -98,10 +95,12 @@ class MapMemoryUsage{
         }
 
         fun pump(){
-            val consumer = DBMaker.memoryDB().make().treeMap("map", Serializer.LONG_DELTA, Serializer.UUID).import()
+            val consumer = DBMaker.memoryDB().make()
+                    .treeMap("map", Serializer.LONG_DELTA, Serializer.UUID)
+                    .createFromSink()
             var c = 0L
             while(true){
-                consumer.take(c++,UUID(c,c))
+                consumer.put(c++,UUID(c,c))
                 if(c%100000L==0L) {
                     println(c);
                     System.out.flush()
@@ -110,10 +109,13 @@ class MapMemoryUsage{
         }
 
         fun sortedTableMap(){
-            val consumer = SortedTableMap.create(ByteArrayVol.FACTORY.makeVolume(null, false), Serializer.LONG_DELTA, Serializer.UUID).consumer()
+            val consumer = SortedTableMap
+                    .create(ByteArrayVol.FACTORY.makeVolume(null, false),
+                            Serializer.LONG_DELTA, Serializer.UUID)
+                    .createFromSink()
             var c = 0L
             while(true){
-                consumer.take(c++,UUID(c,c))
+                consumer.put(c++,UUID(c,c))
                 if(c%100000L==0L) {
                     println(c);
                     System.out.flush()

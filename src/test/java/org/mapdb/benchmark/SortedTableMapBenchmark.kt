@@ -14,11 +14,11 @@ class SortedTableMapBenchmark{
                 keySerializer = Serializer.INTEGER,
                 valueSerializer = Serializer.INTEGER,
                 volume = ByteArrayVol.FACTORY.makeVolume(null, false)
-            ).consumer()
+            ).createFromSink()
         for(i in 0 until size ){
-            consumer.take(Pair(i,i))
+            consumer.put(Pair(i,i))
         }
-        val map = consumer.finish()
+        val map = consumer.create()
 
         Bench.bench("SortedTableMapBenchmark_get") {
             Bench.stopwatch {

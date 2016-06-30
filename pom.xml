@@ -15,8 +15,8 @@
 
     
     <properties>
-        <kotlin.version>1.0.0</kotlin.version>
-	<mapdb.version>3.0.0-M4-SNAPSHOT</mapdb.version>
+        <kotlin.version>1.0.2</kotlin.version>
+	    <mapdb.version>3.0.0</mapdb.version>
 	
         <java.target.version>1.8</java.target.version>
         <java.source.version>1.8</java.source.version>

@@ -25,7 +25,7 @@ class WALPerf{
     fun wal(name:String, volFab: VolumeFactory){
         Bench.bench("WALPerf-$name-preal") {
             val f = Bench.tempFile()
-            val wal = WriteAheadLog(f.path, volFab, 0)
+            val wal = WriteAheadLog(f.path, volFab, 0, false)
             val ret = Bench.stopwatch {
                 for(i in 0 until max){
                     wal.walPutPreallocate(111L)

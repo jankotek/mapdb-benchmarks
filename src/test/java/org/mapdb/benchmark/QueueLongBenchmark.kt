@@ -7,7 +7,7 @@ import org.mapdb.*
 class QueueLongBenchmark{
 
     @Test fun insert(){
-        val db = DB(store=StoreDirect.make(), storeOpened = false)
+        val db = DBMaker.memoryDB().make()
         val map = db.hashMap("aa", keySerializer = Serializer.LONG, valueSerializer = Serializer.LONG).create()
         val max = 1e7.toLong()
 
