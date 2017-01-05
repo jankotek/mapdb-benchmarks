@@ -4,13 +4,14 @@ import org.eclipse.collections.impl.list.mutable.primitive.LongArrayList
 import org.junit.Test
 import org.mapdb.*
 import org.mapdb.benchmark.Bench
+import org.mapdb.benchmark.MapBenchmark
 
 /**
  * Tests insertion speed
  */
 class PutSpeed{
 
-    val max = 5e7.toInt()
+    val max = MapBenchmark.size
     fun b() = ByteArray(10)
     fun b2() = ByteArray(11)
 

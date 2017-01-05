@@ -15,8 +15,8 @@
 
     
     <properties>
-        <kotlin.version>1.0.2</kotlin.version>
-	    <mapdb.version>3.0.0</mapdb.version>
+        <kotlin.version>1.0.6</kotlin.version>
+	    <mapdb.version>3.1.0-SNAPSHOT</mapdb.version>
 	
         <java.target.version>1.8</java.target.version>
         <java.source.version>1.8</java.source.version>
@@ -79,6 +79,11 @@
             <artifactId>junit</artifactId>
             <version>4.12</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mapdb</groupId>
+            <artifactId>elsa</artifactId>
+            <version>3.0.0-M7-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>

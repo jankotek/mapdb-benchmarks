@@ -4,6 +4,7 @@ import org.junit.Test
 import org.mapdb.DataIO
 import org.mapdb.WriteAheadLog
 import org.mapdb.benchmark.Bench
+import org.mapdb.benchmark.MapBenchmark
 import org.mapdb.volume.FileChannelVol
 import org.mapdb.volume.MappedFileVol
 import org.mapdb.volume.RandomAccessFileVol
@@ -20,7 +21,7 @@ import java.nio.file.StandardOpenOption
 
 class WALPerf{
 
-    val max = 1000000;
+    val max = MapBenchmark.size/100
 
     fun wal(name:String, volFab: VolumeFactory){
         Bench.bench("WALPerf-$name-preal") {

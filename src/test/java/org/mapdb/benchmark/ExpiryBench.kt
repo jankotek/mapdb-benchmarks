@@ -21,7 +21,7 @@ class ExpiryBench{
                     stores = arrayOf(StoreDirect.make()),
                     hashSeed = 1
             )
-            val size = 1e7.toInt()
+            val size = MapBenchmark.size
             Bench.stopwatch {
                 for(i in 0 until size) {
                     map.put(i, i)

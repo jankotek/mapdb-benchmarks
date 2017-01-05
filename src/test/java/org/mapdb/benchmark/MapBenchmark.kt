@@ -1,15 +1,15 @@
 package org.mapdb.benchmark
 
 import org.junit.Test
-import org.junit.Assert.*
 import org.mapdb.*
 import java.util.*
-import java.util.concurrent.*
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ConcurrentSkipListMap
 
 class MapBenchmark {
 
     companion object {
-        val size = 1e7.toInt()
+        val size = 1e5.toInt()
     }
 
     @Test fun hashMap() {
