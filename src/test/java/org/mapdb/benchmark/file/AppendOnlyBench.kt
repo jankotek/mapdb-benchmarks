@@ -1,7 +1,7 @@
 package org.mapdb.benchmark.file
 
 import org.junit.Test
-import org.mapdb.DataIO
+import org.mapdb.util.DataIO
 import org.mapdb.benchmark.Bench
 import java.io.BufferedOutputStream
 import java.io.FileOutputStream

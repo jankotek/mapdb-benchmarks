@@ -1,7 +1,7 @@
 package org.mapdb.benchmark
 
 import org.junit.Test
-import org.mapdb.IndexTreeLongLongMap
+import org.mapdb.tree.*
 
 class IndexTreeLongLongMapBench {
 

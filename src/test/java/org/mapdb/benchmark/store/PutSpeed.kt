@@ -3,6 +3,8 @@ package org.mapdb.benchmark.store
 import org.eclipse.collections.impl.list.mutable.primitive.LongArrayList
 import org.junit.Test
 import org.mapdb.*
+import org.mapdb.store.*
+import org.mapdb.tree.*
 import org.mapdb.benchmark.Bench
 import org.mapdb.benchmark.MapBenchmark
 

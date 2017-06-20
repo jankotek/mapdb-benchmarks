@@ -15,9 +15,11 @@
 
     
     <properties>
-        <kotlin.version>1.0.6</kotlin.version>
-	    <mapdb.version>3.1.0-SNAPSHOT</mapdb.version>
-	
+        <kotlin.version>[1.1,2.00)</kotlin.version>
+        <kotlin.plugin.version>1.1.2-5</kotlin.plugin.version>
+
+        <mapdb.version>4.0.0-SNAPSHOT</mapdb.version>
+
         <java.target.version>1.8</java.target.version>
         <java.source.version>1.8</java.source.version>
 
@@ -98,7 +100,7 @@
             <plugin>
                 <artifactId>kotlin-maven-plugin</artifactId>
                 <groupId>org.jetbrains.kotlin</groupId>
-                <version>${kotlin.version}</version>
+                <version>${kotlin.plugin.version}</version>
 
                 <configuration/>
                 <executions>

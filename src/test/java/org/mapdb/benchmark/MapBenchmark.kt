@@ -2,6 +2,8 @@ package org.mapdb.benchmark
 
 import org.junit.Test
 import org.mapdb.*
+import org.mapdb.tree.*
+import org.mapdb.store.*
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentSkipListMap

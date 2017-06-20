@@ -1,7 +1,7 @@
 package org.mapdb.benchmark.store
 
 import org.junit.Test
-import org.mapdb.DataIO
+import org.mapdb.util.DataIO
 import org.mapdb.WriteAheadLog
 import org.mapdb.benchmark.Bench
 import org.mapdb.benchmark.MapBenchmark

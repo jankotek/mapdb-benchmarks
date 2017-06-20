@@ -1,15 +1,12 @@
 package org.mapdb.benchmark
 
 import org.junit.Test
-import org.mapdb.DBMaker
-import org.mapdb.Serializer
-import org.mapdb.SortedTableMap
+import org.mapdb.*
+import org.mapdb.flat.SortedTableMap
 import org.mapdb.volume.ByteArrayVol
-import java.io.File
-import java.io.InputStreamReader
+import java.io.*
 import java.util.*
-import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.ConcurrentSkipListMap
+import java.util.concurrent.*
 
 /**
  * Fills map until it runs out of memory

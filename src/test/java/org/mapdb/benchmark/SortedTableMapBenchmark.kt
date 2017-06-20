@@ -2,6 +2,7 @@ package org.mapdb.benchmark
 
 import org.junit.Test
 import org.mapdb.*
+import org.mapdb.flat.*
 import org.mapdb.volume.ByteArrayVol
 import org.mapdb.volume.Volume
 

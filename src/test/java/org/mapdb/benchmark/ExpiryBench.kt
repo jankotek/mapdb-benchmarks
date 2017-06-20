@@ -1,9 +1,9 @@
 package org.mapdb.benchmark
 
 import org.junit.Test
-import org.mapdb.HTreeMap
-import org.mapdb.Serializer
-import org.mapdb.StoreDirect
+import org.mapdb.tree.*
+import org.mapdb.*
+import org.mapdb.store.*
 
 /**
  * Benchmarks HTreeMap expiration
