@@ -1,8 +1,6 @@
 package org.mapdb.benchmark
 
-import java.io.File
-import java.io.IOError
-import java.io.IOException
+import java.io.*
 import java.util.*
 
 /**
@@ -43,6 +41,11 @@ object Bench{
         props.store(out2,"mapdb benchmark")
         out2.flush()
         out.close()
+
+
+        //remove all temp dirs
+        tempDirs.forEach { tempDeleteRecur(it) }
+        tempDirs.clear()
     }
 
     fun stopwatch(body:()->Unit):Long{
@@ -58,12 +61,9 @@ object Bench{
         return t0.className+"."+t0.methodName
     }
 
-    /** how many hours should unit tests run? Controlled by:
-     * `mvn test -Dmdbtest=2`
-     * @return test scale
-     */
+
     @JvmStatic fun testScale(): Int {
-        val prop = System.getProperty("mdbtest")?:"0";
+        val prop = System.getProperty("testLong")?:"0"
         try {
             return Integer.valueOf(prop);
         } catch(e:NumberFormatException) {
@@ -73,20 +73,23 @@ object Bench{
 
     private val tempDir = System.getProperty("java.io.tmpdir");
 
+    private val tempDirs = HashSet<File>()
+
     /*
-     * Create temporary file in temp folder. All associated db files will be deleted on JVM exit.
+     * Create temporary directory in temp folder.
      */
-    @JvmStatic fun tempFile(): File {
+    @JvmStatic fun tempDir(): File {
         try {
             val stackTrace = Thread.currentThread().stackTrace;
             val elem = stackTrace[2];
             val prefix = "mapdbTest_"+elem.className+"#"+elem.methodName+":"+elem.lineNumber+"_"
             while(true){
-                val file = File(tempDir+"/"+prefix+System.currentTimeMillis()+"_"+Math.random());
-                if(file.exists().not()) {
-                    file.deleteOnExit()
-                    return file
-                }
+                val dir = File(tempDir+"/"+prefix+System.currentTimeMillis()+"_"+Math.random());
+                if(dir.exists())
+                    continue
+                dir.mkdirs()
+                tempDirs+=dir
+                return dir
             }
         } catch (e: IOException) {
             throw IOError(e)
@@ -94,10 +97,8 @@ object Bench{
 
     }
 
-    @JvmStatic fun tempDir(): File {
-        val ret = tempFile()
-        ret.mkdir()
-        return ret
+    @JvmStatic fun tempFile(): File {
+        return File(tempDir(), "benchFile")
     }
 
     @JvmStatic fun tempDelete(file: File){

@@ -1,15 +1,12 @@
 package org.mapdb.benchmark.file
 
 import org.junit.Test
-import org.mapdb.util.DataIO
 import org.mapdb.benchmark.Bench
-import java.io.BufferedOutputStream
-import java.io.FileOutputStream
-import java.io.OutputStream
-import java.io.RandomAccessFile
+import org.mapdb.util.DataIO
+import java.io.*
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
-import java.nio.file.StandardOpenOption
+import java.nio.file.*
 
 /**
  * Benchmarks various options to populate append-only file
@@ -81,7 +78,7 @@ class AppendOnlyBench{
 
     @Test fun bufferedStream(){
         Bench.bench{
-            val f =Bench.tempFile()
+            val f = Bench.tempFile()
             val fs = FileOutputStream(f)
             val bufs = BufferedOutputStream(fs)
             Bench.stopwatch {
@@ -89,6 +86,34 @@ class AppendOnlyBench{
                 bufs.flush()
                 fs.fd.sync()
                 bufs.close()
+                fs.close()
+            }
+        }
+    }
+
+
+    @Test fun sync_stream_bytearray(){
+        Bench.bench{
+            val f = Bench.tempFile()
+            val fs = Files.newOutputStream(f.toPath(), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.SYNC)
+            Bench.stopwatch {
+                val bb = ByteArrayOutputStream()
+                stream(bb)
+                fs.write(bb.toByteArray())
+                fs.close()
+            }
+        }
+    }
+
+
+    @Test fun sync_stream_bytearray2(){
+        Bench.bench{
+            val f = Bench.tempFile()
+            val fs = Files.newOutputStream(f.toPath(), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.SYNC)
+            val bb = ByteArrayOutputStream()
+            Bench.stopwatch {
+                stream(bb)
+                fs.write(bb.toByteArray())
                 fs.close()
             }
         }
